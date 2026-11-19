@@ -1,0 +1,25 @@
+# Replace 203-0-113-10 with your Oracle VPS public IP (dots replaced by dashes),
+# and replace the bcrypt hash generated via: caddy hash-password
+203-0-113-10.sslip.io {
+    header {
+        X-Robots-Tag "noindex, nofollow"
+        Referrer-Policy "no-referrer"
+        X-Content-Type-Options "nosniff"
+    }
+
+    basic_auth {
+        youruser $2a$14$REPLACE_WITH_OUTPUT_FROM_CADDY_HASH_PASSWORD
+    }
+
+    # Optional: background auto-sort API (remove this handle block if using static-only mode)
+    handle /auto-api/* {
+        reverse_proxy 127.0.0.1:3001
+    }
+
+    handle {
+        root * /var/www/spotify-sorter/dist
+        encode zstd gzip
+        try_files {path} /index.html
+        file_server
+    }
+}

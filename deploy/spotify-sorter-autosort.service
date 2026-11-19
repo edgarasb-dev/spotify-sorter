@@ -1,0 +1,20 @@
+[Unit]
+Description=Spotify Playlist Sorter Background Auto-Sort Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/var/www/spotify-sorter
+Environment=HOST=127.0.0.1
+Environment=PORT=3001
+Environment=DATA_DIR=/var/lib/spotify-sorter
+Environment=AUTO_SORT_INTERVAL_SECONDS=120
+ExecStart=/usr/bin/node --max-old-space-size=128 /var/www/spotify-sorter/dist-server/autoSortServer.mjs
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
